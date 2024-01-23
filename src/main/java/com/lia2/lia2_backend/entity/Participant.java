@@ -1,5 +1,6 @@
 package com.lia2.lia2_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
@@ -15,8 +16,10 @@ public class Participant {
     @Column(length = 12)
     private String telephoneNumber;
     @OneToOne
-    @JoinColumn(name = "image_id")
+    // insertable and updatable = false so Hibernate doesn't modify the table
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Image image;
     @OneToMany(mappedBy = "participant")
+    @JsonManagedReference
     private List<Item> participantItems;
 }

@@ -1,5 +1,6 @@
 package com.lia2.lia2_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class Item {
     private Image image;
     @ManyToOne
     @JoinColumn(name = "participant_id")
+    @JsonBackReference
     private Participant participant;
 
 }

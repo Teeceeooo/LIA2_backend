@@ -1,0 +1,10 @@
+package com.lia2.lia2_backend.repository;
+
+import com.lia2.lia2_backend.entity.Participant;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ParticipantRepository extends JpaRepository<Participant, Integer> {
+
+}
