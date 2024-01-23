@@ -12,9 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/participants")
 public class ParticipantController {
+    private final ParticipantService participantService;
 
     @Autowired
-    private ParticipantService participantService;
+    public ParticipantController(ParticipantService participantService) {
+        this.participantService = participantService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Participant>> getAllParticipants() {

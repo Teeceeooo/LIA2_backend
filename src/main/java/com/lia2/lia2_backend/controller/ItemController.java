@@ -13,8 +13,12 @@ import java.util.List;
 @Controller
 @RequestMapping("api/v1/items")
 public class ItemController {
+    private final ItemService itemService;
+
     @Autowired
-    private ItemService itemService;
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItemById(@PathVariable int id) {
