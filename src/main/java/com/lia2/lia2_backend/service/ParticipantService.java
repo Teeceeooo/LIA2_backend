@@ -14,6 +14,7 @@ import java.util.List;
 public class ParticipantService {
     private final ParticipantRepository participantRepository;
 
+
     @Autowired
     public ParticipantService(ParticipantRepository participantRepository) {
         this.participantRepository = participantRepository;
@@ -27,6 +28,7 @@ public class ParticipantService {
         return participantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Användare med ID " + id + " finns inte."));
     }
+
     public Participant createParticipant(Participant participant) {
         // We can add validation logic here if needed
         return participantRepository.save(participant);
