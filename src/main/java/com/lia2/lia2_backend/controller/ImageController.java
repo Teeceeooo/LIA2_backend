@@ -2,13 +2,13 @@ package com.lia2.lia2_backend.controller;
 
 import com.lia2.lia2_backend.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 
@@ -16,6 +16,9 @@ import java.io.IOException;
 @RequestMapping("/api/v1/images")
 public class ImageController {
     private final ImageService imageService;
+
+    @Value("${upload.directory}")
+    private String uploadDirectory;
 
     @Autowired
     public ImageController(ImageService imageService) {
@@ -27,5 +30,18 @@ public class ImageController {
         imageService.determineImageType(imageName);
 
         return imageService.getImageBytes(imageName);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            String fileName = imageService.uploadImage(file);
+            String imageUrl = imageService.getImageUrl(fileName);
+            return ResponseEntity.status(HttpStatus.CREATED).body(imageUrl);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Ladda upp en bild, tack.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Kunde inte ladda upp.");
+        }
     }
 }
