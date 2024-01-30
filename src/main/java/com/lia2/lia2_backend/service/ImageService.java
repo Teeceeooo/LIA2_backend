@@ -1,20 +1,26 @@
 package com.lia2.lia2_backend.service;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class ImageService {
     private static final String IMAGE_DIRECTORY = "src/main/resources/img/";
+    @Value("${upload.directory}")
+    private String uploadDirectory;
 
     @Autowired ImageService() {
     }
@@ -47,5 +53,30 @@ public class ImageService {
         } else {
             return MediaType.APPLICATION_OCTET_STREAM;
         }
+    }
+
+    public String uploadImage(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty.");
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+        String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+
+        File uploadDir = new File(uploadDirectory);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        File destFile = new File(uploadDirectory + File.separator + uniqueFileName);
+        FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+
+        return uniqueFileName;
+    }
+
+    public String getImageUrl(String fileName) {
+        return "/api/v1/images/" + fileName;
     }
 }
