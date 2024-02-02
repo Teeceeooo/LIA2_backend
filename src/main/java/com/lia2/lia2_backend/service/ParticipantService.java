@@ -39,4 +39,8 @@ public class ParticipantService {
         }
         participantRepository.deleteById(id);
     }
+
+    public Boolean checkIfExist(int id) {
+        return participantRepository.existsById(id);
+    }
 }
