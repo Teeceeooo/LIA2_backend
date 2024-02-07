@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class Item {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private int id;
     private String description;
