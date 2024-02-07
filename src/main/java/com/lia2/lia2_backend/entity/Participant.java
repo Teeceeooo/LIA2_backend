@@ -3,6 +3,8 @@ package com.lia2.lia2_backend.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +21,7 @@ public class Participant {
     // insertable and updatable = false so Hibernate doesn't modify the table
     @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Image image;
-    @OneToMany(mappedBy = "participant")
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Item> participantItems;
+    private List<Item> participantItems = new ArrayList<>();
 }

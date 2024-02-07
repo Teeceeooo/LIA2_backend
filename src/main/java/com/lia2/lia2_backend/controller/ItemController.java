@@ -12,6 +12,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/items")
+@CrossOrigin("*")
 public class ItemController {
     private final ItemService itemService;
 

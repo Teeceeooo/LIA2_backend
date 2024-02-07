@@ -1,5 +1,6 @@
 package com.lia2.lia2_backend.controller;
 
+import com.lia2.lia2_backend.entity.Item;
 import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/participants")
+@CrossOrigin("*")
 public class ParticipantController {
     private final ParticipantService participantService;
+    @Autowired
+    private ItemController itemController;
 
     @Autowired
     public ParticipantController(ParticipantService participantService) {
@@ -42,6 +46,11 @@ public class ParticipantController {
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
         Participant createdParticipant = participantService.createParticipant(participant);
+        for (Item item : participant.getParticipantItems()) {
+            item.setParticipant(createdParticipant);
+            itemController.createItem(item);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
     @DeleteMapping("/{id}")
