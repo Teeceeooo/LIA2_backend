@@ -1,5 +1,6 @@
 package com.lia2.lia2_backend.controller;
 
+import com.lia2.lia2_backend.entity.Image;
 import com.lia2.lia2_backend.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class ImageController {
     private final ImageService imageService;
 
-    @Value("${upload.directory}")
+    @Value("C:/LIA2/LIA2_backend/src/main/resources/img")
     private String uploadDirectory;
 
     @Autowired
@@ -38,6 +39,7 @@ public class ImageController {
         try {
             String fileName = imageService.uploadImage(file);
             String imageUrl = imageService.getImageUrl(fileName);
+            int imageId = imageService.saveImageToDatabase(fileName);
             return ResponseEntity.status(HttpStatus.CREATED).body(imageUrl);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Ladda upp en bild, tack.");

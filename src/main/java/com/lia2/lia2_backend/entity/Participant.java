@@ -19,7 +19,7 @@ public class Participant {
     private String telephoneNumber;
     @OneToOne(fetch = FetchType.EAGER)
     // insertable and updatable = false so Hibernate doesn't modify the table
-    @JoinColumn(name = "image_id", insertable = false, updatable = false)
+    @JoinColumn(name = "image_id")
     private Image image;
     @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL)
     @JsonManagedReference

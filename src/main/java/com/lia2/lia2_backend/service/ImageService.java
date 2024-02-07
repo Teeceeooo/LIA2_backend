@@ -1,5 +1,9 @@
 package com.lia2.lia2_backend.service;
 
+import com.lia2.lia2_backend.entity.Image;
+import com.lia2.lia2_backend.repository.ImageRepository;
+import com.lia2.lia2_backend.repository.ParticipantRepository;
+import jakarta.transaction.Transactional;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +27,9 @@ public class ImageService {
     @Value("${upload.directory}")
     private String uploadDirectory;
 
-    @Autowired ImageService() {
+    private final ImageRepository imageRepository;
+    @Autowired ImageService(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
     }
 
     public ResponseEntity<Resource> getImageBytes(String imageName) throws IOException {
@@ -74,6 +81,13 @@ public class ImageService {
         FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
 
         return uniqueFileName;
+    }
+    @Transactional
+    public int saveImageToDatabase(String imageUrl) {
+        Image image = new Image();
+        image.setImageUrl(imageUrl);
+        Image savedImage = imageRepository.save(image);
+        return savedImage.getId();
     }
 
     public String getImageUrl(String fileName) {

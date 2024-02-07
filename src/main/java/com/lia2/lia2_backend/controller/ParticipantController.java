@@ -50,7 +50,6 @@ public class ParticipantController {
             item.setParticipant(createdParticipant);
             itemController.createItem(item);
         }
-
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
     @DeleteMapping("/{id}")
