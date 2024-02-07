@@ -19,6 +19,11 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
+    @GetMapping("/findById/{id}")
+    public Boolean checkIfExist(@PathVariable int id) {
+        return participantService.checkIfExist(id);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Participant>> getAllParticipants() {
         List<Participant> participants = participantService.getAllParticipants();
