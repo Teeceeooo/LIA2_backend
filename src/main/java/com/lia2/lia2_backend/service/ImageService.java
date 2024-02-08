@@ -89,6 +89,10 @@ public class ImageService {
         Image savedImage = imageRepository.save(image);
         return savedImage.getId();
     }
+    @Transactional
+    public void saveImage(Image image) {
+        imageRepository.save(image);
+    }
 
     public String getImageUrl(String fileName) {
         return "/api/v1/images/" + fileName;

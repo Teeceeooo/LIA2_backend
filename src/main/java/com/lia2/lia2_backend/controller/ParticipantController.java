@@ -1,7 +1,9 @@
 package com.lia2.lia2_backend.controller;
 
+import com.lia2.lia2_backend.entity.Image;
 import com.lia2.lia2_backend.entity.Item;
 import com.lia2.lia2_backend.entity.Participant;
+import com.lia2.lia2_backend.service.ImageService;
 import com.lia2.lia2_backend.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ public class ParticipantController {
     private final ParticipantService participantService;
     @Autowired
     private ItemController itemController;
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     public ParticipantController(ParticipantService participantService) {
@@ -45,6 +49,8 @@ public class ParticipantController {
     }
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
+        Image participantImage = participant.getImage();
+        imageService.saveImage(participantImage);
         Participant createdParticipant = participantService.createParticipant(participant);
         for (Item item : participant.getParticipantItems()) {
             item.setParticipant(createdParticipant);
