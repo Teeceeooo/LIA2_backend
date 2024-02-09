@@ -30,7 +30,6 @@ public class ImageController {
     @GetMapping("/img/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {
         imageService.determineImageType(imageName);
-
         return imageService.getImageBytes(imageName);
     }
 
@@ -39,7 +38,7 @@ public class ImageController {
         try {
             String fileName = imageService.uploadImage(file);
             String imageUrl = imageService.getImageUrl(fileName);
-            int imageId = imageService.saveImageToDatabase(fileName);
+            //int imageId = imageService.saveImageToDatabase(fileName);
             return ResponseEntity.status(HttpStatus.CREATED).body(fileName);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Ladda upp en bild, tack.");
