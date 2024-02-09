@@ -17,6 +17,8 @@ public class Participant {
     private String fullName;
     @Column(length = 12)
     private String telephoneNumber;
+    @Column(length = 5000)
+    private String comment;
     @OneToOne(fetch = FetchType.EAGER)
     // insertable and updatable = false so Hibernate doesn't modify the table
     @JoinColumn(name = "image_id")

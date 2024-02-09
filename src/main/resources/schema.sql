@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Participant (
     participant_id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(50),
     telephone_number VARCHAR(12),
+    comment VARCHAR(5000),
     image_id INT,
     FOREIGN KEY (image_id) REFERENCES Image(image_id)
 );
