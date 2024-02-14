@@ -19,7 +19,7 @@ import java.io.IOException;
 public class ImageController {
     private final ImageService imageService;
 
-    @Value("C:/LIA2/LIA2_backend/src/main/resources/img")
+    @Value("C:/LIA2_backend/src/main/resources/img")
     private String uploadDirectory;
 
     @Autowired
