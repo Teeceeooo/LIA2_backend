@@ -1,10 +1,12 @@
 INSERT INTO image (image_id, image_url)
 VALUES
-    (1, 'niklasnohrs.jpg');
+    (2, 'niklasnohrs.jpg'),
+    (1, 'default-image.png');
+
 
 INSERT INTO participant (participant_id, full_name, telephone_number, image_id)
 VALUES
-    (8146845, 'Niklas Nohrs', '123-456-7890', 1),
+    (8146845, 'Niklas Nohrs', '123-456-7890', 2),
     (5841287, 'Sebastian Granlund', '987-654-3210', NULL);
 
 

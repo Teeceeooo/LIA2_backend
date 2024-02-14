@@ -1,6 +1,7 @@
 package com.lia2.lia2_backend.service;
 
 import com.lia2.lia2_backend.entity.Participant;
+import com.lia2.lia2_backend.repository.ImageRepository;
 import com.lia2.lia2_backend.repository.ParticipantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,13 @@ import java.util.List;
 public class ParticipantService {
     private final ParticipantRepository participantRepository;
 
+    private final ImageRepository imageRepository;
+
 
     @Autowired
-    public ParticipantService(ParticipantRepository participantRepository) {
+    public ParticipantService(ParticipantRepository participantRepository, ImageRepository imageRepository) {
         this.participantRepository = participantRepository;
+        this.imageRepository = imageRepository;
     }
 
     public List<Participant> getAllParticipants() {
@@ -42,5 +46,10 @@ public class ParticipantService {
 
     public Boolean checkIfExist(int id) {
         return participantRepository.existsById(id);
+    }
+
+    public Participant editParticipant(Participant editedParticipant) {
+        imageRepository.save(editedParticipant.getImage());
+       return participantRepository.save(editedParticipant);
     }
 }

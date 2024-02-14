@@ -27,6 +27,11 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
+    @PutMapping("/edit")
+    public Participant editParticipant(@RequestBody Participant editedParticipant) {
+        return participantService.editParticipant(editedParticipant);
+    }
+
     @GetMapping("/findById/{id}")
     public Boolean checkIfExist(@PathVariable int id) {
         return participantService.checkIfExist(id);
