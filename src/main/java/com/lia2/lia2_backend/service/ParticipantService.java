@@ -49,7 +49,10 @@ public class ParticipantService {
     }
 
     public Participant editParticipant(Participant editedParticipant) {
-        imageRepository.save(editedParticipant.getImage());
+        if(editedParticipant.getImage() != null){
+            System.out.println("Editedparticipant är null");
+            imageRepository.save(editedParticipant.getImage());
+        }
        return participantRepository.save(editedParticipant);
     }
 }

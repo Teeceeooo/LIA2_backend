@@ -84,13 +84,16 @@ public class ImageService {
     }
     @Transactional
     public int saveImageToDatabase(String imageUrl) {
+       System.out.println("saveImageToDatabase KÖRS");
         Image image = new Image();
         image.setImageUrl(imageUrl);
         Image savedImage = imageRepository.save(image);
         return savedImage.getId();
     }
+
     @Transactional
     public void saveImage(Image image) {
+        System.out.println("saveImage KÖRS");
         imageRepository.save(image);
     }
 

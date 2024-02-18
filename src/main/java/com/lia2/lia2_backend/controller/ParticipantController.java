@@ -5,6 +5,7 @@ import com.lia2.lia2_backend.entity.Item;
 import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.service.ImageService;
 import com.lia2.lia2_backend.service.ParticipantService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,41 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
+    @Transactional
     @PutMapping("/edit")
     public Participant editParticipant(@RequestBody Participant editedParticipant) {
-        return participantService.editParticipant(editedParticipant);
+        Participant existingParticipant = participantService.getParticipantById(editedParticipant.getId());
+
+        if (existingParticipant != null) {
+            if (editedParticipant.getImage() != null) {
+                Image participantImage = editedParticipant.getImage();
+                imageService.saveImage(participantImage);
+                existingParticipant.setImage(participantImage);
+                //System.out.println("Har nya bilden OK ID/URL: " + participantImage.getId() + " " + participantImage.getImageUrl());
+            }
+
+            for (Item item : existingParticipant.getParticipantItems()) {
+                itemController.deleteItemById(item.getId());
+            }
+
+            for (Item item : editedParticipant.getParticipantItems()) {
+                item.setParticipant(editedParticipant);
+               // System.out.println("Detta är itemet: " + item.getDescription());
+                itemController.createItem(item);
+            }
+
+            existingParticipant.setFullName(editedParticipant.getFullName());
+            existingParticipant.setTelephoneNumber(editedParticipant.getTelephoneNumber());
+            existingParticipant.setComment(editedParticipant.getComment());
+            List<Item> newItems = editedParticipant.getParticipantItems();
+            existingParticipant.setParticipantItems(newItems);
+
+            System.out.println("Den nya participanten:  " + existingParticipant);
+            return participantService.editParticipant(existingParticipant);
+        } else {
+            return null;
+        }
+
     }
 
     @GetMapping("/findById/{id}")
@@ -42,6 +75,7 @@ public class ParticipantController {
         List<Participant> participants = participantService.getAllParticipants();
         return ResponseEntity.ok(participants);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Participant> getParticipantById(@PathVariable int id) {
         Participant participant = participantService.getParticipantById(id);
@@ -52,10 +86,14 @@ public class ParticipantController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
-        Image participantImage = participant.getImage();
-        imageService.saveImage(participantImage);
+        if (participant.getImage() != null) {
+            Image participantImage = participant.getImage();
+            imageService.saveImage(participantImage);
+        }
+
         Participant createdParticipant = participantService.createParticipant(participant);
         for (Item item : participant.getParticipantItems()) {
             item.setParticipant(createdParticipant);
@@ -63,6 +101,7 @@ public class ParticipantController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteParticipantById(@PathVariable int id) {
         try {
@@ -73,3 +112,4 @@ public class ParticipantController {
         }
     }
 }
+

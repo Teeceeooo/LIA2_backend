@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Objects;
+
 @Entity
 @Data
 public class Item {
@@ -16,8 +18,18 @@ public class Item {
     @JoinColumn(name = "image_id")
     private Image image;
     @ManyToOne
-    @JoinColumn(name = "participant_id")
+    @JoinColumn(name = "participant_id", nullable=true)
     @JsonBackReference
     private Participant participant;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Item{id=" + id + ", Description='" + description + "'}";
+    }
 
 }
