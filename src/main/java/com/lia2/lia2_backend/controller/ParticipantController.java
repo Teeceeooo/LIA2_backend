@@ -4,13 +4,16 @@ import com.lia2.lia2_backend.entity.Image;
 import com.lia2.lia2_backend.entity.Item;
 import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.service.ImageService;
+import com.lia2.lia2_backend.service.ItemService;
 import com.lia2.lia2_backend.service.ParticipantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,47 +26,14 @@ public class ParticipantController {
     @Autowired
     private ImageService imageService;
 
+    private final ItemService itemService;
+
     @Autowired
-    public ParticipantController(ParticipantService participantService) {
+    public ParticipantController(ParticipantService participantService, ItemService itemService) {
         this.participantService = participantService;
+        this.itemService = itemService;
     }
 
-    @Transactional
-    @PutMapping("/edit")
-    public Participant editParticipant(@RequestBody Participant editedParticipant) {
-        Participant existingParticipant = participantService.getParticipantById(editedParticipant.getId());
-
-        if (existingParticipant != null) {
-            if (editedParticipant.getImage() != null) {
-                Image participantImage = editedParticipant.getImage();
-                imageService.saveImage(participantImage);
-                existingParticipant.setImage(participantImage);
-                //System.out.println("Har nya bilden OK ID/URL: " + participantImage.getId() + " " + participantImage.getImageUrl());
-            }
-
-            for (Item item : existingParticipant.getParticipantItems()) {
-                itemController.deleteItemById(item.getId());
-            }
-
-            for (Item item : editedParticipant.getParticipantItems()) {
-                item.setParticipant(editedParticipant);
-               // System.out.println("Detta är itemet: " + item.getDescription());
-                itemController.createItem(item);
-            }
-
-            existingParticipant.setFullName(editedParticipant.getFullName());
-            existingParticipant.setTelephoneNumber(editedParticipant.getTelephoneNumber());
-            existingParticipant.setComment(editedParticipant.getComment());
-            List<Item> newItems = editedParticipant.getParticipantItems();
-            existingParticipant.setParticipantItems(newItems);
-
-            System.out.println("Den nya participanten:  " + existingParticipant);
-            return participantService.editParticipant(existingParticipant);
-        } else {
-            return null;
-        }
-
-    }
 
     @GetMapping("/findById/{id}")
     public Boolean checkIfExist(@PathVariable int id) {
@@ -87,8 +57,35 @@ public class ParticipantController {
         }
     }
 
+    @Transactional
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
+
+        if (participant.getImage() != null) {
+            Image participantImage = participant.getImage();
+            imageService.saveImage(participantImage);
+        }
+
+        Participant createdParticipant = participantService.createParticipant(participant);
+        for (Item item : participant.getParticipantItems()) {
+            item.setParticipant(createdParticipant);
+            itemController.createItem(item);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
+    }
+
+    @Transactional
+    @PutMapping("/edit")
+    public ResponseEntity<Participant> editParticipant(@RequestBody Participant participant) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>" + participant);
+        Participant test = participantService.getParticipantById(participant.getId());
+        if(test.getParticipantItems() != null){
+            for(Item item : test.getParticipantItems()){
+                itemService.deleteItemById(item.getId());
+                System.out.println(item.getId());
+            }
+        }
+
         if (participant.getImage() != null) {
             Image participantImage = participant.getImage();
             imageService.saveImage(participantImage);

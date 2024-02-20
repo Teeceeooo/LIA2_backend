@@ -36,7 +36,6 @@ public class ImageController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
-            System.out.println("KÖRS JAG?!");
             String fileName = imageService.uploadImage(file);
             String imageUrl = imageService.getImageUrl(fileName);
             //int imageId = imageService.saveImageToDatabase(fileName);

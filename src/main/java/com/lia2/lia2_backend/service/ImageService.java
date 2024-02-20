@@ -92,9 +92,8 @@ public class ImageService {
     }
 
     @Transactional
-    public void saveImage(Image image) {
-        System.out.println("saveImage KÖRS");
-        imageRepository.save(image);
+    public Image saveImage(Image image) {
+        return imageRepository.save(image);
     }
 
     public String getImageUrl(String fileName) {
