@@ -4,7 +4,9 @@ import com.lia2.lia2_backend.entity.Image;
 import com.lia2.lia2_backend.entity.Item;
 import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.service.ImageService;
+import com.lia2.lia2_backend.service.ItemService;
 import com.lia2.lia2_backend.service.ParticipantService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +24,12 @@ public class ParticipantController {
     @Autowired
     private ImageService imageService;
 
+    private final ItemService itemService;
+
     @Autowired
-    public ParticipantController(ParticipantService participantService) {
+    public ParticipantController(ParticipantService participantService, ItemService itemService) {
         this.participantService = participantService;
+        this.itemService = itemService;
     }
 
     @PutMapping("/edit")
@@ -45,17 +50,30 @@ public class ParticipantController {
     @GetMapping("/{id}")
     public ResponseEntity<Participant> getParticipantById(@PathVariable int id) {
         Participant participant = participantService.getParticipantById(id);
-
         if (participant != null) {
             return ResponseEntity.ok(participant);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Transactional
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
+
+        Participant test = participantService.getParticipantById(participant.getId());
+        if(test.getParticipantItems() != null){
+            for(Item item : test.getParticipantItems()){
+                itemService.deleteItemById(item.getId());
+                System.out.println(item.getId());
+            }
+        }
+
+        if(participant.getImage() != null){
         Image participantImage = participant.getImage();
         imageService.saveImage(participantImage);
+        }
+
         Participant createdParticipant = participantService.createParticipant(participant);
         for (Item item : participant.getParticipantItems()) {
             item.setParticipant(createdParticipant);
@@ -72,4 +90,6 @@ public class ParticipantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ett fel uppstod.");
         }
     }
+
+
 }
