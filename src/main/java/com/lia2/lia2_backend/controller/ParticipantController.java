@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -42,6 +44,7 @@ public class ParticipantController {
         List<Participant> participants = participantService.getAllParticipants();
         return ResponseEntity.ok(participants);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Participant> getParticipantById(@PathVariable int id) {
         Participant participant = participantService.getParticipantById(id);
@@ -72,6 +75,7 @@ public class ParticipantController {
     @Transactional
     @PutMapping("/edit")
     public ResponseEntity<Participant> editParticipant(@RequestBody Participant participant) {
+
         Participant test = participantService.getParticipantById(participant.getId());
         if(test.getParticipantItems() != null){
             for(Item item : test.getParticipantItems()){
@@ -91,6 +95,32 @@ public class ParticipantController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
+
+    @Transactional
+    @PutMapping("/edit")
+    public ResponseEntity<Participant> editParticipant(@RequestBody Participant participant) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>" + participant);
+        Participant test = participantService.getParticipantById(participant.getId());
+        if(test.getParticipantItems() != null){
+            for(Item item : test.getParticipantItems()){
+                itemService.deleteItemById(item.getId());
+                System.out.println(item.getId());
+            }
+        }
+
+        if (participant.getImage() != null) {
+            Image participantImage = participant.getImage();
+            imageService.saveImage(participantImage);
+        }
+
+        Participant createdParticipant = participantService.createParticipant(participant);
+        for (Item item : participant.getParticipantItems()) {
+            item.setParticipant(createdParticipant);
+            itemController.createItem(item);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteParticipantById(@PathVariable int id) {
         try {
@@ -103,3 +133,4 @@ public class ParticipantController {
 
 
 }
+
