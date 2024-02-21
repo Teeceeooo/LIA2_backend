@@ -49,7 +49,6 @@ public class ParticipantController {
     @GetMapping("/{id}")
     public ResponseEntity<Participant> getParticipantById(@PathVariable int id) {
         Participant participant = participantService.getParticipantById(id);
-
         if (participant != null) {
             return ResponseEntity.ok(participant);
         } else {
@@ -61,9 +60,19 @@ public class ParticipantController {
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
 
-        if (participant.getImage() != null) {
-            Image participantImage = participant.getImage();
-            imageService.saveImage(participantImage);
+
+        Participant test = participantService.getParticipantById(participant.getId());
+        if(test.getParticipantItems() != null){
+            for(Item item : test.getParticipantItems()){
+                itemService.deleteItemById(item.getId());
+                System.out.println(item.getId());
+            }
+        }
+
+        if(participant.getImage() != null){
+        Image participantImage = participant.getImage();
+        imageService.saveImage(participantImage);
+
         }
 
         Participant createdParticipant = participantService.createParticipant(participant);
@@ -108,5 +117,7 @@ public class ParticipantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ett fel uppstod.");
         }
     }
+
+
 }
 
