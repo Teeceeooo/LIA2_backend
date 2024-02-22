@@ -6,6 +6,7 @@ import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.service.ImageService;
 import com.lia2.lia2_backend.service.ItemService;
 import com.lia2.lia2_backend.service.ParticipantService;
+import jakarta.servlet.http.Part;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import static com.fasterxml.jackson.core.io.NumberInput.parseInt;
 
 @RestController
 @RequestMapping("api/v1/participants")
@@ -68,13 +72,10 @@ public class ParticipantController {
                 System.out.println(item.getId());
             }
         }
-
         if(participant.getImage() != null){
         Image participantImage = participant.getImage();
         imageService.saveImage(participantImage);
-
         }
-
         Participant createdParticipant = participantService.createParticipant(participant);
         for (Item item : participant.getParticipantItems()) {
             item.setParticipant(createdParticipant);
@@ -86,7 +87,6 @@ public class ParticipantController {
     @Transactional
     @PutMapping("/edit")
     public ResponseEntity<Participant> editParticipant(@RequestBody Participant participant) {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>" + participant);
         Participant test = participantService.getParticipantById(participant.getId());
         if(test.getParticipantItems() != null){
             for(Item item : test.getParticipantItems()){
@@ -118,6 +118,12 @@ public class ParticipantController {
         }
     }
 
-
+    @PostMapping("/searchusers")
+    public List<Participant> searchParticipants(@RequestBody Map<String, Object> searchData) {
+       // String id = searchData.get("id").toString();
+        String fullName = searchData.get("fullName") != null ? searchData.get("fullName").toString() : null;
+        String telephoneNumber = searchData.get("telephoneNumber") != null ? searchData.get("telephoneNumber").toString() : null;
+        return participantService.searchParticipants(fullName, telephoneNumber);
+    }
 }
 
