@@ -12,6 +12,13 @@ import java.util.List;
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant, Integer> {
 
-    @Query("SELECT p FROM Participant p WHERE p.fullName LIKE %:fullName% OR p.telephoneNumber LIKE %:telephoneNumber%")
-    List<Participant> searchParticipants(@Param("fullName") String fullName, @Param("telephoneNumber") String telephoneNumber);
+    @Query("SELECT p FROM Participant p WHERE " +
+            "(COALESCE(:fullName, '') = '' OR p.fullName LIKE %:fullName%) AND " +
+            "(COALESCE(:telephoneNumber, '') = '' OR p.telephoneNumber LIKE %:telephoneNumber%) AND " +
+            "(COALESCE(:comment, '') = '' OR p.comment LIKE %:comment%) AND " +
+            "(:id IS NULL OR p.id = :id)")
+
+    List<Participant> searchParticipants(@Param("fullName") String fullName,
+                                         @Param("telephoneNumber") String telephoneNumber,
+                                         @Param("comment") String comment);
 }
