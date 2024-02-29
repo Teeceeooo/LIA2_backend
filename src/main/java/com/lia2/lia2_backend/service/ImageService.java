@@ -23,7 +23,6 @@ import java.util.UUID;
 
 @Service
 public class ImageService {
-    private static final String IMAGE_DIRECTORY = "src/main/resources/img/";
     @Value("${upload.directory}")
     private String uploadDirectory;
 
@@ -33,7 +32,7 @@ public class ImageService {
     }
 
     public ResponseEntity<Resource> getImageBytes(String imageName) throws IOException {
-        String imagePath = IMAGE_DIRECTORY + imageName;
+        String imagePath = uploadDirectory + imageName;
         File imageFile = new File(imagePath);
 
         if(imageFile.exists()) {
