@@ -32,8 +32,10 @@ public class ImageService {
     }
 
     public ResponseEntity<Resource> getImageBytes(String imageName) throws IOException {
+        System.out.println("getImagesBytes");
         String imagePath = uploadDirectory + imageName;
         File imageFile = new File(imagePath);
+        System.out.println("Imagepath: " + imagePath);
 
         if(imageFile.exists()) {
             MediaType mediaType = determineImageType(imageName);
@@ -48,6 +50,7 @@ public class ImageService {
                     .contentType(mediaType)
                     .body(resource);
         } else {
+            System.out.println("Image not found");
             return ResponseEntity.notFound().build();
         }
     }
