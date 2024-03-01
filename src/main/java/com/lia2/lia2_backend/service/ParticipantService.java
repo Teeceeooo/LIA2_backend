@@ -1,19 +1,15 @@
 package com.lia2.lia2_backend.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.repository.ImageRepository;
 import com.lia2.lia2_backend.repository.ParticipantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ParticipantService {
@@ -62,8 +58,7 @@ public class ParticipantService {
     }
 
 
-    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment) {
-
-        return participantRepository.searchParticipants(fullName, telephoneNumber, comment);
+    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment, Integer id) {
+        return participantRepository.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }
