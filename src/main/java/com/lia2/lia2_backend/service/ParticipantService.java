@@ -62,8 +62,8 @@ public class ParticipantService {
     }
 
 
-    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment) {
+    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment, Integer id) {
 
-        return participantRepository.searchParticipants(fullName, telephoneNumber, comment);
+        return participantRepository.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }

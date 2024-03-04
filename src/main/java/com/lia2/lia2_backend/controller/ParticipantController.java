@@ -120,11 +120,11 @@ public class ParticipantController {
 
     @PostMapping("/searchusers")
     public List<Participant> searchParticipants(@RequestBody Map<String, Object> searchData) {
-        //int id = searchData.get("id") != null ? (Integer) searchData.get("id") : -1;
         String fullName = searchData.get("fullName") != null ? searchData.get("fullName").toString() : null;
         String telephoneNumber = searchData.get("telephoneNumber") != null ? searchData.get("telephoneNumber").toString() : null;
         String comment = searchData.get("comment") != null ? searchData.get("comment").toString() : null;
-        return participantService.searchParticipants(fullName, telephoneNumber, comment);
+        Integer id = searchData.get("id") != null ? Integer.parseInt(searchData.get("id").toString()) : null;
+        return participantService.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }
 

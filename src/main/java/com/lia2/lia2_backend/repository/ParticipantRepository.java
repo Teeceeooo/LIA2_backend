@@ -17,8 +17,8 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
             "(COALESCE(:telephoneNumber, '') = '' OR p.telephoneNumber LIKE %:telephoneNumber%) AND " +
             "(COALESCE(:comment, '') = '' OR p.comment LIKE %:comment%) AND " +
             "(:id IS NULL OR p.id = :id)")
-
     List<Participant> searchParticipants(@Param("fullName") String fullName,
                                          @Param("telephoneNumber") String telephoneNumber,
-                                         @Param("comment") String comment);
+                                         @Param("comment") String comment,
+                                         @Param("id") Integer id);
 }
