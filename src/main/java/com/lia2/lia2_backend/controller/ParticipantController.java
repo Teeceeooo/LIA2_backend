@@ -38,7 +38,6 @@ public class ParticipantController {
         this.itemService = itemService;
     }
 
-
     @GetMapping("/findById/{id}")
     public Boolean checkIfExist(@PathVariable int id) {
         return participantService.checkIfExist(id);
@@ -63,15 +62,6 @@ public class ParticipantController {
     @Transactional
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
-
-
-        Participant test = participantService.getParticipantById(participant.getId());
-        if(test.getParticipantItems() != null){
-            for(Item item : test.getParticipantItems()){
-                itemService.deleteItemById(item.getId());
-                System.out.println(item.getId());
-            }
-        }
         if(participant.getImage() != null){
         Image participantImage = participant.getImage();
         imageService.saveImage(participantImage);
@@ -91,7 +81,6 @@ public class ParticipantController {
         if(test.getParticipantItems() != null){
             for(Item item : test.getParticipantItems()){
                 itemService.deleteItemById(item.getId());
-                System.out.println(item.getId());
             }
         }
 
@@ -107,7 +96,6 @@ public class ParticipantController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteParticipantById(@PathVariable int id) {
         try {

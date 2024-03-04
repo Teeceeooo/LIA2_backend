@@ -19,9 +19,6 @@ import java.io.IOException;
 public class ImageController {
     private final ImageService imageService;
 
-    @Value("C:/LIA2_backend/src/main/resources/img")
-    private String uploadDirectory;
-
     @Autowired
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
