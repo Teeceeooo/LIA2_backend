@@ -50,13 +50,15 @@ public class ParticipantService {
 
     public Participant editParticipant(Participant editedParticipant) {
 
-        if(editedParticipant.getImage() != null){
+        if(editedParticipant.getImage() != null) {
             System.out.println("Editedparticipant är null");
             imageRepository.save(editedParticipant.getImage());
         }
-
-
-
        return participantRepository.save(editedParticipant);
+    }
+
+
+    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment, Integer id) {
+        return participantRepository.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }
