@@ -28,7 +28,7 @@ public class ParticipantService {
         return participantRepository.findAll();
     }
 
-    public Participant getParticipantById(int id) {
+    public Participant getParticipantById(String id) {
         return participantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Användare med ID " + id + " finns inte."));
     }
@@ -37,14 +37,14 @@ public class ParticipantService {
         // We can add validation logic here if needed
         return participantRepository.save(participant);
     }
-    public void deleteParticipantById(int id) {
+    public void deleteParticipantById(String id) {
         if(!participantRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Användare med ID " + id + " finns inte.");
         }
         participantRepository.deleteById(id);
     }
 
-    public Boolean checkIfExist(int id) {
+    public Boolean checkIfExist(String id) {
         return participantRepository.existsById(id);
     }
 
@@ -58,7 +58,7 @@ public class ParticipantService {
     }
 
 
-    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment, Integer id) {
+    public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment, String id) {
         return participantRepository.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }
