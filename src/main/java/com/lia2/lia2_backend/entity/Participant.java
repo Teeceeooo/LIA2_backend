@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Participant {
     @Id
     @Column(name = "participant_id")
-    private int id;
+    private String id;
     @Column(length = 50)
     private String fullName;
     @Column(length = 12)

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ParticipantRepository extends JpaRepository<Participant, Integer> {
+public interface ParticipantRepository extends JpaRepository<Participant, String> {
 
     @Query("SELECT p FROM Participant p WHERE " +
             "(COALESCE(:fullName, '') = '' OR p.fullName LIKE %:fullName%) AND " +
@@ -20,5 +20,5 @@ public interface ParticipantRepository extends JpaRepository<Participant, Intege
     List<Participant> searchParticipants(@Param("fullName") String fullName,
                                          @Param("telephoneNumber") String telephoneNumber,
                                          @Param("comment") String comment,
-                                         @Param("id") Integer id);
+                                         @Param("id") String id);
 }
