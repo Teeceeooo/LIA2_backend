@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Image (
 );
 
 CREATE TABLE IF NOT EXISTS Participant (
-    participant_id INT AUTO_INCREMENT PRIMARY KEY,
+    participant_id VARCHAR(14) PRIMARY KEY,
     full_name VARCHAR(50),
     telephone_number VARCHAR(12),
     comment VARCHAR(5000),
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS Participant (
 CREATE TABLE IF NOT EXISTS Item (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
     description VARCHAR(255),
-    participant_id INT,
+    participant_id VARCHAR(20),
     image_id INT,
     FOREIGN KEY (participant_id) REFERENCES Participant(participant_id),
     FOREIGN KEY (image_id) REFERENCES Image(image_id)

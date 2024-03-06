@@ -38,8 +38,9 @@ public class ParticipantController {
         this.itemService = itemService;
     }
 
+
     @GetMapping("/findById/{id}")
-    public Boolean checkIfExist(@PathVariable int id) {
+    public Boolean checkIfExist(@PathVariable String id) {
         return participantService.checkIfExist(id);
     }
 
@@ -50,7 +51,7 @@ public class ParticipantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Participant> getParticipantById(@PathVariable int id) {
+    public ResponseEntity<Participant> getParticipantById(@PathVariable String id) {
         Participant participant = participantService.getParticipantById(id);
         if (participant != null) {
             return ResponseEntity.ok(participant);
@@ -62,6 +63,15 @@ public class ParticipantController {
     @Transactional
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
+
+
+        Participant test = participantService.getParticipantById(participant.getId());
+        if(test.getParticipantItems() != null){
+            for(Item item : test.getParticipantItems()){
+                itemService.deleteItemById(item.getId());
+                System.out.println(item.getId());
+            }
+        }
         if(participant.getImage() != null){
         Image participantImage = participant.getImage();
         imageService.saveImage(participantImage);
@@ -81,6 +91,7 @@ public class ParticipantController {
         if(test.getParticipantItems() != null){
             for(Item item : test.getParticipantItems()){
                 itemService.deleteItemById(item.getId());
+                System.out.println(item.getId());
             }
         }
 
@@ -96,8 +107,9 @@ public class ParticipantController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteParticipantById(@PathVariable int id) {
+    public ResponseEntity<String> deleteParticipantById(@PathVariable String id) {
         try {
             participantService.deleteParticipantById(id);
             return ResponseEntity.ok("Användare med ID " + id + " raderad.");
@@ -111,7 +123,7 @@ public class ParticipantController {
         String fullName = searchData.get("fullName") != null ? searchData.get("fullName").toString() : null;
         String telephoneNumber = searchData.get("telephoneNumber") != null ? searchData.get("telephoneNumber").toString() : null;
         String comment = searchData.get("comment") != null ? searchData.get("comment").toString() : null;
-        Integer id = searchData.get("id") != null ? Integer.parseInt(searchData.get("id").toString()) : null;
+        String id = searchData.get("id") != null ? searchData.get("id").toString() : null;
         return participantService.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }
