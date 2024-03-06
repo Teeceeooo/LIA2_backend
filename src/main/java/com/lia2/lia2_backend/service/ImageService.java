@@ -98,7 +98,5 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
-    public String getImageUrl(String fileName) {
-        return "/api/v1/images/" + fileName;
-    }
+
 }

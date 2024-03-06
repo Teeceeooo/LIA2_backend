@@ -6,36 +6,32 @@ import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.service.ImageService;
 import com.lia2.lia2_backend.service.ItemService;
 import com.lia2.lia2_backend.service.ParticipantService;
-import jakarta.servlet.http.Part;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import static com.fasterxml.jackson.core.io.NumberInput.parseInt;
 
 @RestController
 @RequestMapping("api/v1/participants")
 @CrossOrigin("*")
 public class ParticipantController {
     private final ParticipantService participantService;
-    @Autowired
+
     private ItemController itemController;
-    @Autowired
+
     private ImageService imageService;
 
     private final ItemService itemService;
 
     @Autowired
-    public ParticipantController(ParticipantService participantService, ItemService itemService) {
+    public ParticipantController(ParticipantService participantService, ItemService itemService, ImageService imageService, ItemController itemController) {
         this.participantService = participantService;
         this.itemService = itemService;
+        this.imageService = imageService;
+        this.itemController = itemController;
     }
 
 
@@ -44,11 +40,6 @@ public class ParticipantController {
         return participantService.checkIfExist(id);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Participant>> getAllParticipants() {
-        List<Participant> participants = participantService.getAllParticipants();
-        return ResponseEntity.ok(participants);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Participant> getParticipantById(@PathVariable String id) {
@@ -64,14 +55,6 @@ public class ParticipantController {
     @PostMapping("/add")
     public ResponseEntity<Participant> createParticipant(@RequestBody Participant participant) {
 
-
-        Participant test = participantService.getParticipantById(participant.getId());
-        if(test.getParticipantItems() != null){
-            for(Item item : test.getParticipantItems()){
-                itemService.deleteItemById(item.getId());
-                System.out.println(item.getId());
-            }
-        }
         if(participant.getImage() != null){
         Image participantImage = participant.getImage();
         imageService.saveImage(participantImage);
@@ -87,11 +70,10 @@ public class ParticipantController {
     @Transactional
     @PutMapping("/edit")
     public ResponseEntity<Participant> editParticipant(@RequestBody Participant participant) {
-        Participant test = participantService.getParticipantById(participant.getId());
-        if(test.getParticipantItems() != null){
-            for(Item item : test.getParticipantItems()){
+        Participant exisintParticipant = participantService.getParticipantById(participant.getId());
+        if(exisintParticipant.getParticipantItems() != null){
+            for(Item item : exisintParticipant.getParticipantItems()){
                 itemService.deleteItemById(item.getId());
-                System.out.println(item.getId());
             }
         }
 
@@ -103,7 +85,7 @@ public class ParticipantController {
         Participant createdParticipant = participantService.createParticipant(participant);
         for (Item item : participant.getParticipantItems()) {
             item.setParticipant(createdParticipant);
-            itemController.createItem(item);
+            itemService.createItem(item);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
@@ -119,11 +101,11 @@ public class ParticipantController {
     }
 
     @PostMapping("/searchusers")
-    public List<Participant> searchParticipants(@RequestBody Map<String, Object> searchData) {
-        String fullName = searchData.get("fullName") != null ? searchData.get("fullName").toString() : null;
-        String telephoneNumber = searchData.get("telephoneNumber") != null ? searchData.get("telephoneNumber").toString() : null;
-        String comment = searchData.get("comment") != null ? searchData.get("comment").toString() : null;
-        String id = searchData.get("id") != null ? searchData.get("id").toString() : null;
+    public List<Participant> searchParticipants(@RequestBody Map<String, String> searchData) {
+        String fullName = searchData.get("fullName");
+        String telephoneNumber = searchData.get("telephoneNumber");
+        String comment = searchData.get("comment");
+        String id = searchData.get("id");
         return participantService.searchParticipants(fullName, telephoneNumber, comment, id);
     }
 }
