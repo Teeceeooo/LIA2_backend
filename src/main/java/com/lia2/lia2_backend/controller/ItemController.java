@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("api/v1/items")
@@ -31,11 +32,6 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/all")
-    public ResponseEntity<List<Item>> getAllItems() {
-        List<Item> items = itemService.getAllItems();
-        return ResponseEntity.ok(items);
-    }
     @PostMapping("/create")
     public ResponseEntity<Item> createItem(@RequestBody Item item) {
         try {
@@ -50,17 +46,10 @@ public class ItemController {
         try {
             itemService.deleteItemById(id);
             return ResponseEntity.ok("Pryl med " + id + " raderad.");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Objektet med ID " + id + " finns inte.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ett fel uppstod.");
-        }
-    }
-    @DeleteMapping("/all")
-    public ResponseEntity<String> deleteAllItems() {
-        try {
-            itemService.deleteAllItems();
-            return ResponseEntity.ok("Alla prylar har raderas.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ett fel uppstod att radera alla prylar.");
         }
     }
 }

@@ -39,7 +39,7 @@ public class ParticipantService {
     }
     public void deleteParticipantById(String id) {
         if(!participantRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Användare med ID " + id + " finns inte.");
+            throw new EntityNotFoundException("Användare med ID " + id + " finns inte.");
         }
         participantRepository.deleteById(id);
     }
@@ -49,7 +49,6 @@ public class ParticipantService {
     }
 
     public Participant editParticipant(Participant editedParticipant) {
-
         if(editedParticipant.getImage() != null) {
             System.out.println("Editedparticipant är null");
             imageRepository.save(editedParticipant.getImage());

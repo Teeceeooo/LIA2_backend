@@ -21,9 +21,6 @@ public class ItemService {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pryl med ID " + id + " finns inte."));
     }
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
-    }
     public Item createItem(Item item) {
         try {
             return itemRepository.save(item);
@@ -36,13 +33,6 @@ public class ItemService {
             itemRepository.deleteById(id);
         } catch (Exception ex) {
             throw new RuntimeException("Ett fel uppstod med ID : " + id, ex);
-        }
-    }
-    public void deleteAllItems() {
-        try {
-            itemRepository.deleteAll();
-        } catch (Exception ex) {
-            throw new RuntimeException("Ett fell uppstod med att radera alla prylar", ex);
         }
     }
 
