@@ -29,6 +29,7 @@ public class Participant {
     @JsonManagedReference
     private List<Item> participantItems = new ArrayList<>();
 
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

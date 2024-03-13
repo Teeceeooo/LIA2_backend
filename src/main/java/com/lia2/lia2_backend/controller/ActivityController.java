@@ -79,7 +79,7 @@ public class ActivityController {
             newActivity.setTypeOfActivity(Activity.TypeOfActivity.valueOf(typeOfActivity));
 
             LocalDateTime timeNow = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss-");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String formattedDateTime = timeNow.format(formatter);
             newActivity.setTimeOfActivity(formattedDateTime);
 
