@@ -38,3 +38,13 @@ VALUES
     (4, 'Headset', '8146845'),        -- Niklas har ett headset
     (5, 'Chassis', '5841287'),        -- Sebastian har ett headset
     (6, 'Monitor', '5841287');        -- Sebastian har ett headset
+
+INSERT INTO users
+VALUES ('nohrs', '$2a$10$DoFjHDqrFNgVj.gBShw.N.GtcKVzB81ogvJpDiVLivgDC2gK2tXcy', 1),
+       ('mkag', '$2a$10$5yYCl/V8eWhg2nZCkPB1ouD82gM96zpTdUYXmwDVfN/JeSefRC9iS', 1);
+
+INSERT INTO authorities (username, authority)
+VALUES ('nohrs', 'ROLE_USER'),
+       ('nohrs', 'ROLE_ADMIN'),
+       ('mkag', 'ROLE_ADMIN'),
+       ('mkag', 'ROLE_USER');
