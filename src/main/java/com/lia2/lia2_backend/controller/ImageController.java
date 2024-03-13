@@ -40,7 +40,7 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Kunde inte ladda upp.");
         }
     }
-    @GetMapping("/img/{imageName}")
+    @GetMapping("/img/path/{imageName}")
     public String getImageUrl(@PathVariable String imageName) {
         Path imagePath = Paths.get("/api/v1/images/", imageName);
         return imagePath.toString();

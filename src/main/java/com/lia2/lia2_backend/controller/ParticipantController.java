@@ -70,9 +70,9 @@ public class ParticipantController {
     @Transactional
     @PutMapping("/edit")
     public ResponseEntity<Participant> editParticipant(@RequestBody Participant participant) {
-        Participant exisintParticipant = participantService.getParticipantById(participant.getId());
-        if(exisintParticipant.getParticipantItems() != null){
-            for(Item item : exisintParticipant.getParticipantItems()){
+        Participant existingParticipant = participantService.getParticipantById(participant.getId());
+        if(existingParticipant.getParticipantItems() != null){
+            for(Item item : existingParticipant.getParticipantItems()){
                 itemService.deleteItemById(item.getId());
             }
         }
