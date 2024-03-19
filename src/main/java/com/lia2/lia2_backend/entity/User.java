@@ -10,10 +10,8 @@ import java.util.Set;
 @Data
 @Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Id
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 

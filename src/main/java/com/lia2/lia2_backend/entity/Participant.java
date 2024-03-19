@@ -3,7 +3,6 @@ package com.lia2.lia2_backend.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,10 @@ public class Participant {
     @JsonManagedReference
     private List<Item> participantItems = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Activity> activityList = new ArrayList<>();
 
     @Override
     public int hashCode() {
