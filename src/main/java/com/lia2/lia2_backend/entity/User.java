@@ -36,4 +36,9 @@ public class User {
         this.password = password;
         this.enabled = enabled;
     }
+
+
+    public boolean getEnabled() {
+        return enabled;
+    }
 }
