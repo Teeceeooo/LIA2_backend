@@ -1,10 +1,11 @@
 package com.lia2.lia2_backend.service;
 
 import com.lia2.lia2_backend.entity.Authority;
-import com.lia2.lia2_backend.entity.Participant;
 import com.lia2.lia2_backend.entity.User;
 import com.lia2.lia2_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,17 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public Page<User> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public User findByUserName(String username) {
+        return userRepository.findUserByusername(username);
+    }
+
+    public User editUser(String username) {
+      return userRepository.findUserByusername(username);
     }
 }
