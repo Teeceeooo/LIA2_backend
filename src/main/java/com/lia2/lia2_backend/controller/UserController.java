@@ -3,7 +3,6 @@ package com.lia2.lia2_backend.controller;
 import com.lia2.lia2_backend.entity.*;
 import com.lia2.lia2_backend.service.UserService;
 import jakarta.transaction.Transactional;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +20,8 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class UserController {
 
+    private final PasswordEncoder passwordEncoder;
+
     private final UserService userService;
 
     @GetMapping("/getAll")
@@ -28,8 +30,9 @@ public class UserController {
     }
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/getUsers")
@@ -51,20 +54,16 @@ public class UserController {
     @Transactional
     @PutMapping("/edit")
     public ResponseEntity<User> editUser(@RequestBody User user) {
-        System.out.println("CHECK DIS" + user);
         User existingUser = userService.editUser(user.getUsername());
-        existingUser.setUsername(user.getUsername());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setRoles(user.getRoles());
-        existingUser.setName(user.getName());
-        existingUser.setEnabled(user.getEnabled());
-
-        if (existingUser != null) {
+        if(existingUser != null) {
+            existingUser.setEnabled(user.getEnabled());
+            if(user.getPassword() != null){
+                existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
             return ResponseEntity.ok(existingUser);
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
         @GetMapping("/{username}")
         public User getUserByUserName (@PathVariable String username){
