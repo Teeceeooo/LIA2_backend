@@ -50,4 +50,9 @@ public class UserService {
     public User editUser(String username) {
       return userRepository.findUserByusername(username);
     }
+
+    public List<User> searchModerators(String accountName, String name) {
+        return userRepository.searchModerators(accountName, name);
+
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -49,6 +50,14 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody User user) {
         userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Användare skapad");
+    }
+
+    @PostMapping("/searchmoderator")
+    public List<User> searchModerators(@RequestBody Map<String, String> searchData) {
+        String accountName = searchData.get("accountName");
+        String name = searchData.get("name");
+        return userService.searchModerators(accountName, name);
+
     }
 
     @Transactional
