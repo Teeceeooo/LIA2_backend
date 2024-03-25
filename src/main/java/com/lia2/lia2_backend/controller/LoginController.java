@@ -3,6 +3,7 @@ package com.lia2.lia2_backend.controller;
 import com.lia2.lia2_backend.DTO.UserDTO;
 import com.lia2.lia2_backend.entity.User;
 import com.lia2.lia2_backend.repository.UserRepository;
+import com.lia2.lia2_backend.service.TokenService;
 import com.lia2.lia2_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 public class LoginController {
     private final UserService userService;
     private final UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     public LoginController(UserService userService, UserRepository userRepository) {
@@ -28,22 +31,14 @@ public class LoginController {
 
     @GetMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        System.out.println(username);
         Optional<UserDTO> userOpt = userRepository.findUserByUsername(username);
-        System.out.println(userOpt);
         if (userOpt.isPresent()) {
             UserDTO user = userOpt.get();
             if (BCrypt.checkpw(password, user.getPassword())) {
-                System.out.println("inde i if satsen");
-                UserDTO userDTO = new UserDTO();
-                userDTO.setId(user.getId());
-                userDTO.setUsername(user.getUsername());
-                userDTO.setName(user.getName());
-                //userDTO.setRoles(user.getRoles().stream().collect(Collectors.toSet()));
-                return ResponseEntity.ok(userDTO);
+                String token = tokenService.generateTokenUsingSecret(username).getJwtToken();
+                return ResponseEntity.ok(token);
             }
         }
-        System.out.println("test");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
