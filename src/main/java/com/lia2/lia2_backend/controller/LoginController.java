@@ -35,8 +35,13 @@ public class LoginController {
         if (userOpt.isPresent()) {
             UserDTO user = userOpt.get();
             if (BCrypt.checkpw(password, user.getPassword())) {
-                String token = tokenService.generateTokenUsingSecret(username).getJwtToken();
-                return ResponseEntity.ok(token);
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(user.getId());
+                userDTO.setUsername(user.getUsername());
+                userDTO.setName(user.getName());
+                //userDTO.setRoles(user.getRoles().stream().collect(Collectors.toSet()));
+                //String token = tokenService.generateTokenUsingSecret(username).getJwtToken();
+                return ResponseEntity.ok(userDTO);
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
