@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import com.lia2.lia2_backend.entity.Authority;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,8 +43,10 @@ public class LoginController {
                 userDTO.setUsername(user.getUsername());
                 userDTO.setName(user.getName());
                 //userDTO.setRoles(user.getRoles().stream().collect(Collectors.toSet()));
-                //String token = tokenService.generateTokenUsingSecret(username).getJwtToken();
-                return ResponseEntity.ok(userDTO);
+                String token = tokenService.generateTokenUsingSecret(username).getJwtToken();
+                Map<String, String> responseBody = new HashMap<>();
+                responseBody.put("token", token);
+                return ResponseEntity.ok(responseBody);
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
