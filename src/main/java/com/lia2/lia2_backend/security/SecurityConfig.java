@@ -35,7 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/login", "/api/v1/token/**").permitAll()
+                .requestMatchers("/api/v1/login", "/api/v1/token/**", "/api/v1/images/img/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);

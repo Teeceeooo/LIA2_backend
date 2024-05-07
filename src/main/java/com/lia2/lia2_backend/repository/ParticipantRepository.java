@@ -21,4 +21,23 @@ public interface ParticipantRepository extends JpaRepository<Participant, String
                                          @Param("telephoneNumber") String telephoneNumber,
                                          @Param("comment") String comment,
                                          @Param("id") String id);
+
+    @Query("SELECT COUNT(p) FROM Participant p " +
+            "WHERE NOT EXISTS (" +
+            "   SELECT 1 FROM Activity a " +
+            "   WHERE a.participant = p AND a.typeOfActivity = 'CHECKED_OUT'" +
+            ")")
+    int countCheckedInParticipants();
+
+    @Query("SELECT COUNT(p) FROM Participant p " +
+            "JOIN p.activityList a " +
+            "WHERE a.id IN (" +
+            "   SELECT MAX(a2.id) FROM Activity a2 " +
+            "   WHERE a2.participant = p" +
+            ") AND (a.typeOfActivity = 'ENTERED_THE_BUILDING' OR a.typeOfActivity = 'CHECKED_IN')")
+    int countNumberOfParticipantsInBuilding();
+
 }
+
+
+

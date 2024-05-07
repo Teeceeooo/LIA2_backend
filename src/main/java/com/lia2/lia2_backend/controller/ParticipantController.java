@@ -34,6 +34,16 @@ public class ParticipantController {
         this.itemController = itemController;
     }
 
+    @GetMapping("/findNumberOfParticipants")
+    public int findNumberOfParticipants() {
+        return participantService.findNumberOfParticipants();
+    }
+
+    @GetMapping("/countParticipantsInBuilding")
+    public int findParticipantsInBuilding() {
+        return participantService.countParticipantsInBuilding();
+    }
+
 
     @GetMapping("/findById/{id}")
     public Boolean checkIfExist(@PathVariable String id) {

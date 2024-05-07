@@ -64,4 +64,13 @@ public class ParticipantService {
     public List<Participant> searchParticipants(String fullName, String telephoneNumber, String comment, String id) {
         return participantRepository.searchParticipants(fullName, telephoneNumber, comment, id);
     }
+
+    public int findNumberOfParticipants() {
+        return participantRepository.countCheckedInParticipants();
+    }
+
+
+    public int countParticipantsInBuilding() {
+        return participantRepository.countNumberOfParticipantsInBuilding();
+    }
 }
